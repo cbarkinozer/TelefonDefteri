@@ -7,8 +7,10 @@ Public Class Form1
         Try
             sayi3 = sayi1 + sayi2
             TextBox3.Text = sayi3
-        Catch tipHatasi As System.InvalidCastException
-            TextBox3.Text = "Error"
+        Catch tipHata As System.InvalidCastException
+            MsgBox("Lütfen tamsayı girin")
+        Catch hata As Exception
+            MsgBox("Bilinmeyen hata")
         End Try
     End Sub
 
