@@ -36,6 +36,23 @@ son:
     End Sub
 
     Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
+
+        If TextBox1.Text.Contains(",") Then
+            Try
+
+                sayi1 = CSng(TextBox1.Text)
+
+
+            Catch sinirHata As IndexOutOfRangeException
+
+                sayi1 = CDbl(TextBox1.Text)
+            End Try
+            GoTo son
+        End If
+
+
+
+
         Try
             sayi2 = CInt(TextBox2.Text)
         Catch tipHata As System.InvalidCastException
@@ -43,7 +60,7 @@ son:
         Catch hata As Exception
             MsgBox("Bilinmeyen hata. " & hata.Message)
         End Try
-
+son:
     End Sub
 
 
