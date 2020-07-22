@@ -46,7 +46,7 @@ Public Class Form1
         If con.State = ConnectionState.Open Then
             con.Close()
         End If
-
+        con.Open()
         cmd = con.CreateCommand()
         cmd.CommandType = CommandType.Text
         cmd.CommandText = " UPDATE telefonDefteri SET ad ='" + TextBox1.Text + "' ,soyad= '" + TextBox2.Text + "' ,eposta='" + TextBox3.Text +
