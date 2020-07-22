@@ -15,7 +15,7 @@ Public Class Form1
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         'ekle butonu
-        Dim insertQuery As String = "INSERT INTO phoneBook(ad,soyad,e-posta,yas,postaKodu,okulNo) VALUES(' & TextBox1.Text',' &TextBox2.Text','&TextBox3.Text','&TextBox4.Text','&TextBox5.Text','&TextBox6')"
+        Dim insertQuery As String = "INSERT INTO telefonDefteri(ad,soyad,eposta,yas,postaKodu,okulNo) VALUES(' & TextBox1.Text',' &TextBox2.Text','&TextBox3.Text','&TextBox4.Text','&TextBox5.Text','&TextBox6')"
         ExecuteQuery(insertQuery)
         MessageBox.Show("Kişi eklendi")
         Dim X As Control
@@ -28,7 +28,7 @@ Public Class Form1
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         'update butonu
-        Dim updateQuery As String = "Update phoneBook Set ad= ' & TextBox1.Text', soyad= '&TextBox2.Text',e-posta= ' & TextBox3.Text',yas= '& TextBox4.Text',postaKodu='& TextBox5.Text',okulNo= '& TextBox6.Text'"
+        Dim updateQuery As String = "Update telefonDefteri Set ad= ' & TextBox1.Text', soyad= '&TextBox2.Text',e-posta= ' & TextBox3.Text',yas= '& TextBox4.Text',postaKodu='& TextBox5.Text',okulNo= '& TextBox6.Text'"
         ExecuteQuery(updateQuery)
         MessageBox.Show("Kişiler güncellendi")
     End Sub
