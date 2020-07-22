@@ -31,7 +31,8 @@ Public Class Form1
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         'update butonu
-        Dim updateQuery As String = "Update telefonDefteri Set ad= '" & TextBox1.Text"', soyad= '"&TextBox2.Text"',e-posta= '"& TextBox3.Text"', yas= CInt(nvarchar(10),'"&TextBox4.Text"'),postaKodu='"& TextBox5.Text"',okulNo= '"& TextBox6.Text"' "
+        Dim updateQuery As String = "Update telefonDefteri Set ad= '" & TextBox1.Text & "', soyad= '" & TextBox2.Text & "',e-posta= '" _
+        & TextBox3.Text & "', yas='" & TextBox4.Text & "',postaKodu='" & TextBox5.Text & "',okulNo= '" & TextBox6.Text & "' "
         ExecuteQuery(updateQuery)
         MessageBox.Show("Kişiler güncellendi")
     End Sub
