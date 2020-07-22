@@ -2,6 +2,8 @@ Imports System.Data.SqlClient
 Public Class Form1
     Dim connection As New SqlConnection("Server=DESKTOP-E5T285L;Database= telefonRehberi;Integrated Security =true")
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'TODO: This line of code loads data into the 'TelefonRehberiDataSet.telefonDefteri' table. You can move, or remove it, as needed.
+        Me.TelefonDefteriTableAdapter.Fill(Me.TelefonRehberiDataSet.telefonDefteri)
 
 
     End Sub
@@ -30,15 +32,21 @@ Public Class Form1
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        'update butonu
+        'güncelle butonu
         Dim updateQuery As String = "Update telefonDefteri Set ad= '" & TextBox1.Text & "', soyad= '" & TextBox2.Text & "',e-posta= '" _
         & TextBox3.Text & "', yas='" & TextBox4.Text & "',postaKodu='" & TextBox5.Text & "',okulNo= '" & TextBox6.Text & "' "
         ExecuteQuery(updateQuery)
         MessageBox.Show("Kişiler güncellendi")
+        Dim X As Control
+        For Each X In Me.Controls
+            If TypeOf X Is TextBox Then
+                X.Text = ""
+            End If
+        Next X
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        'delete butonu
+        'sil butonu
         'Dim deleteQuery As String = " "
         ' ExecuteQuery(deleteQuery)
         'MessageBox.Show("Kişi silindi")
