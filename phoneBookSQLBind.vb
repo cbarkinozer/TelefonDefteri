@@ -1,9 +1,8 @@
 Imports System.Data.SqlClient
 Public Class Form1
-    Dim con As New SqlConnection
+    Dim con As New SqlConnection("Server=DESKTOP-E5T285L;Database= telefonRehberi;Integrated Security =true")
     Dim cmd As New SqlCommand
     Dim i As Integer
-    Dim connection As New SqlConnection("Server=DESKTOP-E5T285L;Database= telefonRehberi;Integrated Security =true")
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'TODO: This line of code loads data into the 'TelefonRehberiDataSet.telefonDefteri' table. You can move, or remove it, as needed.
         Me.TelefonDefteriTableAdapter.Fill(Me.TelefonRehberiDataSet.telefonDefteri)
@@ -11,11 +10,11 @@ Public Class Form1
 
     End Sub
     Public Sub ExecuteQuery(query As String)
-        Dim command As New SqlCommand(query, connection)
+        Dim command As New SqlCommand(query, con)
 
-        connection.Open()
+        con.Open()
         command.ExecuteNonQuery()
-        connection.Close()
+        con.Close()
     End Sub
     Public Sub displayData()
         cmd = con.CreateCommand()
@@ -75,6 +74,7 @@ Public Class Form1
                 con.Close()
             End If
             con.Open()
+
             i = Convert.ToInt32(DataGridView1.SelectedCells.Item(0).Value.ToString())
             cmd = con.CreateCommand()
             cmd.CommandType = CommandType.Text
