@@ -11,6 +11,7 @@ Public Class Form1
 
     End Sub
     Private Sub loadData()
+        'refresh the gridview
         Try
             Dim Str As String = "SELECT * FROM telefonDefteri"
             con.Open()
@@ -32,7 +33,14 @@ Public Class Form1
         con.Close()
     End Sub
     Public Sub displayData()
+        'show selected rows on input boxes
         Try
+
+            If con.State = ConnectionState.Open Then
+                con.Close()
+            End If
+            con.Open()
+
             cmd = con.CreateCommand()
             cmd.CommandType = CommandType.Text
             cmd.ExecuteNonQuery()
@@ -40,14 +48,14 @@ Public Class Form1
             Dim da As New SqlDataAdapter(cmd)
             da.Fill(dt)
             DataGridView1.DataSource = dt
-
+            con.Close()
         Catch ex As Exception
             MsgBox("ldisplay data error" & ex.Message)
         End Try
 
     End Sub
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        'ekle butonu
+        'add button
         Try
             Dim insertQuery As String = "INSERT INTO telefonDefteri (ad,soyad,eposta,yas,postaKodu,okulNo) " _
             & " VALUES " & "('" & TextBox1.Text & "','" & TextBox2.Text & "','" & TextBox3.Text & "'," _
@@ -72,7 +80,7 @@ Public Class Form1
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        'güncelle butonu
+        'update button
         Try
             displayData()
             Dim updateQuery As String = " UPDATE telefonDefteri SET ad ='" + TextBox1.Text + "' ,soyad= '" + TextBox2.Text + "' ,eposta='" + TextBox3.Text +
@@ -100,9 +108,10 @@ Public Class Form1
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        'sil butonu
+        'delete button
         Try
             If DataGridView1.SelectedRows.Count > 0 Then
+
                 Dim deleteQuery As String = "DELETE FROM telefonDefteri WHERE telefonDefteriID= " & i & ""
                 ExecuteQuery(deleteQuery)
 
@@ -121,21 +130,29 @@ Public Class Form1
     End Sub
 
     Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
+        'choose row to show in input boxes
         Try
             If con.State = ConnectionState.Open Then
                 con.Close()
             End If
+
             con.Open()
 
             i = DataGridView1.SelectedCells.Item(0).Value
+
             cmd = con.CreateCommand()
             cmd.CommandType = CommandType.Text
+
             cmd.ExecuteNonQuery()
+
             Dim dt As New DataTable()
             Dim da As New SqlDataAdapter(cmd)
-            da.Fill(dt)
             Dim dr As SqlClient.SqlDataReader
+
+            da.Fill(dt)
+
             dr = cmd.ExecuteReader(CommandBehavior.CloseConnection)
+
             While dr.Read
                 TextBox1.Text = dr.GetString(1).ToString()
                 TextBox2.Text = dr.GetString(2).ToString()
@@ -144,6 +161,8 @@ Public Class Form1
                 TextBox5.Text = dr.GetString(5).ToString()
                 TextBox6.Text = dr.GetString(6).ToString()
             End While
+
+
         Catch hata As Exception
             MsgBox("DataGridView_Click error. " & hata.Message)
         End Try
