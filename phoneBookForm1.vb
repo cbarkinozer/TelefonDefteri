@@ -3,14 +3,15 @@ Public Class Form1
     Dim con As New SqlConnection("Server=DESKTOP-E5T285L;Database= telefonRehberi;Integrated Security =true")
     Dim cmd As New SqlCommand
     Dim i As Integer
+    Dim newForm2 As New Form2
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'TODO: This line of code loads data into the 'TelefonRehberiDataSet.telefonDefteri' table. You can move, or remove it, as needed.
         Me.TelefonDefteriTableAdapter.Fill(Me.TelefonRehberiDataSet.telefonDefteri)
-
+        Form2.Hide()
 
     End Sub
-    Private Sub loadData()
+    Public Sub loadData()
         'refresh the gridview
         Try
             Dim Str As String = "SELECT * FROM telefonDefteri"
@@ -56,59 +57,20 @@ Public Class Form1
     End Sub
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         'add button
-        Try
-            Dim insertQuery As String = "INSERT INTO telefonDefteri (ad,soyad,eposta,yas,postaKodu,okulNo) " _
-            & " VALUES " & "('" & TextBox1.Text & "','" & TextBox2.Text & "','" & TextBox3.Text & "'," _
-            & TextBox4.Text & ",'" & TextBox5.Text & "','" & TextBox6.Text & "')"
-
-            ExecuteQuery(insertQuery)
-
-            loadData()
-
-            MessageBox.Show("Kişi eklendi")
-
-            Dim X As Control
-            For Each X In Me.Controls
-                If TypeOf X Is TextBox Then
-                    X.Text = ""
-                End If
-            Next X
-        Catch ex As Exception
-            MsgBox("adding error" & ex.Message)
-        End Try
+        newForm2.ShowDialog()
 
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         'update button
-        Try
-            displayData()
-            Dim updateQuery As String = " UPDATE telefonDefteri SET ad ='" + TextBox1.Text + "' ,soyad= '" + TextBox2.Text + "' ,eposta='" + TextBox3.Text +
-            "' ,yas='" + TextBox4.Text + "' ,postaKodu='" + TextBox5.Text + "' ,okulNo='" + TextBox6.Text + "'  where telefonDefteriID= " & i & ""
-
-            ExecuteQuery(updateQuery)
-
-            loadData()
-
-            MessageBox.Show("Kişiler güncellendi")
-
-            Dim X As Control
-            For Each X In Me.Controls
-                If TypeOf X Is TextBox Then
-                    X.Text = ""
-                End If
-            Next X
-
-
-        Catch ex As Exception
-            MsgBox("update error" & ex.Message)
-        End Try
-
+        newForm2.ShowDialog()
 
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+
         'delete button
+
         Try
             If DataGridView1.SelectedRows.Count > 0 Then
 
@@ -154,12 +116,12 @@ Public Class Form1
             dr = cmd.ExecuteReader(CommandBehavior.CloseConnection)
 
             While dr.Read
-                TextBox1.Text = dr.GetString(1).ToString()
-                TextBox2.Text = dr.GetString(2).ToString()
-                TextBox3.Text = dr.GetString(3).ToString()
-                TextBox4.Text = dr.GetString(4).ToString()
-                TextBox5.Text = dr.GetString(5).ToString()
-                TextBox6.Text = dr.GetString(6).ToString()
+                Form2.TextBox1.Text = dr.GetString(1).ToString()
+                Form2.TextBox2.Text = dr.GetString(2).ToString()
+                Form2.TextBox3.Text = dr.GetString(3).ToString()
+                Form2.TextBox4.Text = dr.GetString(4).ToString()
+                Form2.TextBox5.Text = dr.GetString(5).ToString()
+                Form2.TextBox6.Text = dr.GetString(6).ToString()
             End While
 
 
@@ -169,4 +131,9 @@ Public Class Form1
 
     End Sub
 
+    Private Sub DataGridView1_Click(sender As Object, e As EventArgs) Handles DataGridView1.Click
+
+        DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+
+    End Sub
 End Class
