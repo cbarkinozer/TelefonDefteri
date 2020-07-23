@@ -55,14 +55,9 @@ Public Class Form1
 
             ExecuteQuery(insertQuery)
 
-
-
             loadData()
 
-
             MessageBox.Show("Kişi eklendi")
-
-
 
             Dim X As Control
             For Each X In Me.Controls
@@ -79,11 +74,16 @@ Public Class Form1
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         'güncelle butonu
         Try
+            displayData()
             Dim updateQuery As String = " UPDATE telefonDefteri SET ad ='" + TextBox1.Text + "' ,soyad= '" + TextBox2.Text + "' ,eposta='" + TextBox3.Text +
             "' ,yas='" + TextBox4.Text + "' ,postaKodu='" + TextBox5.Text + "' ,okulNo='" + TextBox6.Text + "'  where telefonDefteriID= " & i & ""
+
             ExecuteQuery(updateQuery)
-            displayData()
+
+            loadData()
+
             MessageBox.Show("Kişiler güncellendi")
+
             Dim X As Control
             For Each X In Me.Controls
                 If TypeOf X Is TextBox Then
@@ -105,11 +105,14 @@ Public Class Form1
             If DataGridView1.SelectedRows.Count > 0 Then
                 Dim deleteQuery As String = "DELETE FROM telefonDefteri WHERE telefonDefteriID= " & i & ""
                 ExecuteQuery(deleteQuery)
+
             Else
                 MessageBox.Show("No rows to select")
             End If
+
             MessageBox.Show("Kişi silindi")
 
+            loadData()
         Catch ex As Exception
             MsgBox("delete error" & ex.Message)
         End Try
