@@ -57,13 +57,17 @@ Public Class Form1
     End Sub
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         'add button
+
         newForm2.ShowDialog()
+
 
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         'update button
+
         newForm2.ShowDialog()
+
 
     End Sub
 
