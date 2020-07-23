@@ -12,12 +12,12 @@ Public Class Form1
     End Sub
     Private Sub loadData()
         Try
-            Dim Str As String = "SELECT * FROM tbl_info"
+            Dim Str As String = "SELECT * FROM telefonDefteri"
             con.Open()
             Dim Search As New SqlDataAdapter(Str, con)
             Dim ds As DataSet = New DataSet
-            Search.Fill(ds, "tbl_info")
-            DataGridView1.DataSource = ds.Tables("tbl_info")
+            Search.Fill(ds, "telefonDefteri")
+            DataGridView1.DataSource = ds.Tables("telefonDefteri")
             con.Close()
         Catch ex As Exception
             MsgBox("loading data error" & ex.Message)
