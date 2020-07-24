@@ -4,21 +4,27 @@ Public Class Form2
     Dim cmd As New SqlCommand
     Dim i As Integer
 
-
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        If Me.Tag <> "" Then
+
+            'veri çekilip gösterilecek...
+
+            Form1.displayData() 'show selected row
+            i = Form1.DataGridView1.SelectedRows.Item(0).ToString 'get selected row
+
+        End If
 
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        'kaydet
+        'kaydet butonu
 
-
-        If (Tag = 0) Then
+        'differentiate update and add
+        If (Me.Tag <> "") Then
             'güncelle
             Try
-                Form1.displayData() 'show selected row
-                i = Form1.DataGridView1.SelectedRows.Item(0).ToString 'get selected row
+
 
                 If i = "" Then ' be sure its not empty
                     MessageBox.Show("Güncellenecek kayıt yok")
@@ -26,19 +32,29 @@ Public Class Form2
                 Else
                     'sql command
                     Dim command As New SqlCommand("UPDATE TelefonDefteri SET ad = @name ,soyad = @surname ,eposta = @email, _
-                    yas=@age,postaKodu=@pcode,okulNo=@sno WHERE telefonDefteriID = @id  ", con)
+                    yas=@age,postaKodu=@postCode,okulNo=@stdNo WHERE telefonDefteriID = @id  ", con)
 
                     'sql injection security parameters
-                    command.Parameters.Add("@id", SqlDbType.VarChar).Value = i
+
                     command.Parameters.Add("@name", SqlDbType.VarChar).Value = TextBox1.Text
                     command.Parameters.Add("@surname", SqlDbType.VarChar).Value = TextBox2.Text
                     command.Parameters.Add("@email", SqlDbType.VarChar).Value = TextBox3.Text
                     command.Parameters.Add("@age", SqlDbType.Int).Value = TextBox4.Text
-                    command.Parameters.Add("@pcode", SqlDbType.VarChar).Value = TextBox5.Text
-                    command.Parameters.Add("@sno", SqlDbType.VarChar).Value = TextBox6.Text
+                    command.Parameters.Add("@postCode", SqlDbType.VarChar).Value = TextBox5.Text
+                    command.Parameters.Add("@stdNo", SqlDbType.VarChar).Value = TextBox6.Text
+                    command.Parameters.Add("@id", SqlDbType.Int).Value = i
 
+
+                    'check connection state
+                    If ConnectionState.Open Then
+                        con.Close()
+                    End If
+                    'open connection
                     con.Open()
+                    'execute command
+                    command.ExecuteNonQuery()
 
+                    'check execution success
                     If command.ExecuteNonQuery() = 1 Then
                         MessageBox.Show("Kayıt güncellendi")
                         Form1.loadData()
@@ -46,11 +62,11 @@ Public Class Form2
                     Else
                         MessageBox.Show("Kayıt Güncellenemedi")
                     End If
-
+                    ' close connection
                     con.Close()
 
                 End If
-
+                ' clear textboxes
                 Dim X As Control
                 For Each X In Me.Controls
                     If TypeOf X Is TextBox Then
@@ -64,10 +80,11 @@ Public Class Form2
 
 
 
-        ElseIf (Tag = 1) Then
+        Else
+
             'ekle
             Try
-
+                ' sql command
                 Dim command As New SqlCommand("INSERT INTO TelefonDefteri  ad = @name ,soyad = @surname ,eposta = @email, _
                     yas=@age,postaKodu=@pcode,okulNo=@sno ", con)
 
@@ -79,7 +96,16 @@ Public Class Form2
                 command.Parameters.Add("@pcode", SqlDbType.VarChar).Value = TextBox5.Text
                 command.Parameters.Add("@sno", SqlDbType.VarChar).Value = TextBox6.Text
 
+                'check the connection state
+                If ConnectionState.Open Then
+                    con.Close()
+                End If
+                'open connection
+                con.Open()
+                'execute
+                command.ExecuteNonQuery()
 
+                'check execution sucess
                 If command.ExecuteNonQuery() = 1 Then
                     MessageBox.Show("Kayıt eklendi")
                     Form1.loadData()
@@ -88,8 +114,10 @@ Public Class Form2
                     MessageBox.Show("Kayıt eklenemedi")
                 End If
 
+                'close connection
+                con.Close()
 
-
+                'clear textboxes
                 Dim X As Control
                 For Each X In Me.Controls
                     If TypeOf X Is TextBox Then
