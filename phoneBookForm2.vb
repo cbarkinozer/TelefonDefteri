@@ -21,14 +21,15 @@ Public Class Form2
                 i = Form1.DataGridView1.SelectedRows.Item(0).ToString 'get selected row
 
                 If i = "" Then ' be sure its not empty
-                    MessageBox.Show("Empty Id")
+                    MessageBox.Show("Güncellenecek kayıt yok")
 
                 Else
                     'sql command
-                    Dim command As New SqlCommand("UPDATE Users SET ad = @name ,soyad = @surname ,eposta = @email, _
-                    yas=@age,postaKodu=@pcode,okulNo=@sno WHERE telefonDefteriID = @id", con)
+                    Dim command As New SqlCommand("UPDATE TelefonDefteri SET ad = @name ,soyad = @surname ,eposta = @email, _
+                    yas=@age,postaKodu=@pcode,okulNo=@sno WHERE telefonDefteriID = @id  ", con)
 
                     'sql injection security parameters
+                    command.Parameters.Add("@id", SqlDbType.VarChar).Value = i
                     command.Parameters.Add("@name", SqlDbType.VarChar).Value = TextBox1.Text
                     command.Parameters.Add("@surname", SqlDbType.VarChar).Value = TextBox2.Text
                     command.Parameters.Add("@email", SqlDbType.VarChar).Value = TextBox3.Text
@@ -39,21 +40,16 @@ Public Class Form2
                     con.Open()
 
                     If command.ExecuteNonQuery() = 1 Then
-                        MessageBox.Show("Data Updated")
+                        MessageBox.Show("Kayıt güncellendi")
+                        Form1.loadData()
 
                     Else
-                        MessageBox.Show("Data Not Updated")
+                        MessageBox.Show("Kayıt Güncellenemedi")
                     End If
 
                     con.Close()
 
                 End If
-
-
-
-                Form1.loadData()
-
-                MessageBox.Show("Kişiler güncellendi")
 
                 Dim X As Control
                 For Each X In Me.Controls
@@ -72,15 +68,27 @@ Public Class Form2
             'ekle
             Try
 
-                Dim insertQuery As String = "INSERT INTO telefonDefteri (ad,soyad,eposta,yas,postaKodu,okulNo) " _
-                & " VALUES " & "('" & TextBox1.Text & "','" & TextBox2.Text & "','" & TextBox3.Text & "'," _
-                & TextBox4.Text & ",'" & TextBox5.Text & "','" & TextBox6.Text & "')"
+                Dim command As New SqlCommand("INSERT INTO TelefonDefteri  ad = @name ,soyad = @surname ,eposta = @email, _
+                    yas=@age,postaKodu=@pcode,okulNo=@sno ", con)
 
-                Form1.ExecuteQuery(insertQuery)
+                'sql injection security parameters
+                command.Parameters.Add("@name", SqlDbType.VarChar).Value = TextBox1.Text
+                command.Parameters.Add("@surname", SqlDbType.VarChar).Value = TextBox2.Text
+                command.Parameters.Add("@email", SqlDbType.VarChar).Value = TextBox3.Text
+                command.Parameters.Add("@age", SqlDbType.Int).Value = TextBox4.Text
+                command.Parameters.Add("@pcode", SqlDbType.VarChar).Value = TextBox5.Text
+                command.Parameters.Add("@sno", SqlDbType.VarChar).Value = TextBox6.Text
 
-                Form1.loadData()
 
-                MessageBox.Show("Kişi eklendi")
+                If command.ExecuteNonQuery() = 1 Then
+                    MessageBox.Show("Kayıt eklendi")
+                    Form1.loadData()
+
+                Else
+                    MessageBox.Show("Kayıt eklenemedi")
+                End If
+
+
 
                 Dim X As Control
                 For Each X In Me.Controls
