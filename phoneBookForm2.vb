@@ -31,8 +31,8 @@ Public Class Form2
 
                 Else
                     'sql command
-                    Dim command As New SqlCommand("UPDATE TelefonDefteri SET ad = @name ,soyad = @surname ,eposta = @email, _
-                    yas=@age,postaKodu=@postCode,okulNo=@stdNo WHERE telefonDefteriID = @id  ", con)
+                    Dim command As New SqlCommand("UPDATE TelefonDefteri SET ad = @name ,soyad = @surname ,eposta = @email,
+                    yas=@age,postaKodu=@postCode,okulNo=@stdNo WHERE telefonDefteriID = @id ", con)
 
                     'sql injection security parameters
 
@@ -75,7 +75,7 @@ Public Class Form2
                 Next X
 
             Catch ex As Exception
-                MsgBox("update error" & ex.Message)
+                MsgBox("update error " & ex.Message)
             End Try
 
 
@@ -85,8 +85,8 @@ Public Class Form2
             'ekle
             Try
                 ' sql command
-                Dim command As New SqlCommand("INSERT INTO TelefonDefteri  ad = @name ,soyad = @surname ,eposta = @email, _
-                    yas=@age,postaKodu=@pcode,okulNo=@sno ", con)
+                Dim command As New SqlCommand("INSERT INTO TelefonDefteri(ad,soyad,eposta,yas,postaKodu,okulNo)
+                Values(@name,@surname,@email,@age,@pcode,@sno) ", con)
 
                 'sql injection security parameters
                 command.Parameters.Add("@name", SqlDbType.VarChar).Value = TextBox1.Text
@@ -105,14 +105,11 @@ Public Class Form2
                 'execute
                 command.ExecuteNonQuery()
 
-                'check execution sucess
-                If command.ExecuteNonQuery() = 1 Then
-                    MessageBox.Show("Kayıt eklendi")
-                    Form1.loadData()
+                MessageBox.Show("Kayıt eklendi")
 
-                Else
-                    MessageBox.Show("Kayıt eklenemedi")
-                End If
+                'refresh
+                Form1.loadData()
+
 
                 'close connection
                 con.Close()
@@ -126,7 +123,7 @@ Public Class Form2
                 Next X
 
             Catch ex As Exception
-                MsgBox("adding error" & ex.Message)
+                MsgBox("adding error " & ex.Message)
             End Try
 
         End If
