@@ -2,8 +2,9 @@ Imports System.Data.SqlClient
 Public Class Form1
     Dim con As New SqlConnection("Server=DESKTOP-E5T285L;Database= telefonRehberi;Integrated Security =true")
     Dim cmd As New SqlCommand
-    Dim i As Integer
+    Dim i As Integer 'holds selected id
     Dim newForm2 As New Form2
+    Private selectionChanged As Boolean ' selection for gridview click
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -83,15 +84,15 @@ Public Class Form1
 
         Try
             If DataGridView1.SelectedRows.Count > 0 Then
+                i = DataGridView1.SelectedCells.Item(0).Value
 
-
-                If i = "" Then ' be sure its not empty
+                If i = "" Then ' being sure its not empty
                     MessageBox.Show("Empty Id")
 
                 Else
                     'sql command
                     Dim command As New SqlCommand("DELETE telefonDefteri  WHERE telefonDefteriID = @id", con)
-                    command.Parameters.Add("@id", SqlDbType.VarChar).Value = i
+                    command.Parameters.Add("@id", SqlDbType.Int).Value = i
                     con.Open()
 
                         If command.ExecuteNonQuery() = 1 Then
@@ -131,6 +132,16 @@ Public Class Form1
 
             i = DataGridView1.SelectedCells.Item(0).Value
 
+            If Not selectionChanged Then
+                DataGridView1.ClearSelection()
+                selectionChanged = True
+            Else
+                selectionChanged = False
+            End If
+
+
+
+
             cmd = con.CreateCommand()
             cmd.CommandType = CommandType.Text
 
@@ -166,4 +177,10 @@ Public Class Form1
         DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect
 
     End Sub
+    Private Sub dataGridView1_SelectionChanged(sender As Object, e As EventArgs)
+        selectionChanged = True
+    End Sub
+
+
+
 End Class
