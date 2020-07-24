@@ -17,11 +17,15 @@ Public Class Form1
         Try
             Dim Str As String = "SELECT * FROM telefonDefteri"
             con.Open()
+
             Dim Search As New SqlDataAdapter(Str, con)
             Dim ds As DataSet = New DataSet
+
             Search.Fill(ds, "telefonDefteri")
             DataGridView1.DataSource = ds.Tables("telefonDefteri")
+
             con.Close()
+
         Catch ex As Exception
             MsgBox("loading data error" & ex.Message)
             con.Close()
@@ -59,7 +63,6 @@ Public Class Form1
     Public Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         'add button
 
-        newForm2.Tag = DataGridView1.SelectedRows.Item(1).ToString()
         newForm2.ShowDialog()
 
 
