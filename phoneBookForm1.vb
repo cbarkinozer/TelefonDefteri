@@ -5,10 +5,11 @@ Public Class Form1
     Dim i As Integer
     Dim newForm2 As New Form2
 
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'TODO: This line of code loads data into the 'TelefonRehberiDataSet.telefonDefteri' table. You can move, or remove it, as needed.
         Me.TelefonDefteriTableAdapter.Fill(Me.TelefonRehberiDataSet.telefonDefteri)
-        Form2.Hide()
+
 
     End Sub
     Public Sub loadData()
@@ -51,21 +52,23 @@ Public Class Form1
             DataGridView1.DataSource = dt
             con.Close()
         Catch ex As Exception
-            MsgBox("ldisplay data error" & ex.Message)
+            MsgBox("Display data error" & ex.Message)
         End Try
 
     End Sub
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+    Public Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         'add button
 
+        newForm2.Tag = DataGridView1.SelectedRows.Item(1).ToString()
         newForm2.ShowDialog()
 
 
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Public Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         'update button
 
+        newForm2.Tag = DataGridView1.SelectedRows.Item(0).ToString()
         newForm2.ShowDialog()
 
 
