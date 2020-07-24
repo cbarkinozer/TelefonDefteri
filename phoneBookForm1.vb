@@ -123,12 +123,13 @@ Public Class Form1
             dr = cmd.ExecuteReader(CommandBehavior.CloseConnection)
 
             While dr.Read
-                Form2.TextBox1.Text = dr.GetString(1).ToString()
-                Form2.TextBox2.Text = dr.GetString(2).ToString()
-                Form2.TextBox3.Text = dr.GetString(3).ToString()
-                Form2.TextBox4.Text = dr.GetString(4).ToString()
-                Form2.TextBox5.Text = dr.GetString(5).ToString()
-                Form2.TextBox6.Text = dr.GetString(6).ToString()
+
+                Form2.TextBox1.Text = DataGridView1.SelectedRows.Item(1).ToString
+                Form2.TextBox2.Text = DataGridView1.SelectedRows.Item(2).ToString
+                Form2.TextBox3.Text = DataGridView1.SelectedRows.Item(3).ToString
+                Form2.TextBox4.Text = DataGridView1.SelectedRows.Item(4).ToString
+                Form2.TextBox5.Text = DataGridView1.SelectedRows.Item(5).ToString
+                Form2.TextBox6.Text = DataGridView1.SelectedRows.Item(6).ToString
             End While
 
 
