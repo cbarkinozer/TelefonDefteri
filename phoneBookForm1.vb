@@ -81,16 +81,35 @@ Public Class Form1
         Try
             If DataGridView1.SelectedRows.Count > 0 Then
 
-                Dim deleteQuery As String = "DELETE FROM telefonDefteri WHERE telefonDefteriID= " & i & ""
-                ExecuteQuery(deleteQuery)
 
-            Else
-                MessageBox.Show("No rows to select")
+                If i = "" Then ' be sure its not empty
+                    MessageBox.Show("Empty Id")
+
+                Else
+                    'sql command
+                    Dim command As New SqlCommand("DELETE telefonDefteri  WHERE telefonDefteriID = @id", con)
+                    command.Parameters.Add("@id", SqlDbType.VarChar).Value = i
+                    con.Open()
+
+                        If command.ExecuteNonQuery() = 1 Then
+                        MessageBox.Show("Kişi silindi")
+                        loadData()
+                    Else
+                        MessageBox.Show("Kişi silinemedi")
+                    End If
+
+                        con.Close()
+
+                    End If
+
+
+                    Else
+                MessageBox.Show("Hiçbir kayıt seçilmedi")
             End If
 
-            MessageBox.Show("Kişi silindi")
 
-            loadData()
+
+
         Catch ex As Exception
             MsgBox("delete error" & ex.Message)
         End Try
