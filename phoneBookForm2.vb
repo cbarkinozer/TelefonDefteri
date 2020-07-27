@@ -7,7 +7,7 @@ Public Class Form2
 
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        If Me.Tag <> "" Then
+        If Me.Tag <> Nothing Then
 
             'veri çekilip gösterilecek
             displayData()
@@ -18,37 +18,40 @@ Public Class Form2
     Public Sub displayData()
         'show selected rows on input boxes
         Try
-            'check connection
-            If con.State = ConnectionState.Open Then
-                con.Close()
-            End If
 
-            con.Open()
-
-            Dim command As New SqlCommand("SELECT ad,soyad,eposta,yas,postaKodu,okulNo FROM telefonDefteri WHERE telefonDefteriID = '" Me.Tag"' ", con)
-            command.Parameters.Add("@id", SqlDbType.NVarChar).Value = Me.Tag
 
             Dim conn As SqlConnection = New SqlConnection()
             Dim constr As String = "Data Source=Localhost;Initial Catalog=telefonRehberi;Persist Security Info=true;" _
-            & "user ID=sa;Password= ***;"
+            & "user ID=sa;Password= barorkar99;"
+            Dim cmd As New SqlCommand
             conn.ConnectionString = constr
-            Dim cmd As SqlCommand = New SqlCommand()
+            cmd.Connection = conn
             conn.Open()
 
-            cmd.CommandText = ""
+            cmd.CommandText = "SELECT ad,soyad,eposta,yas,postaKodu,okulNo FROM telefonDefteri WHERE telefonDefteriID = " & Me.Tag
+
+            Dim reader As SqlDataReader = cmd.ExecuteReader()
+
+
+            While reader.Read
+                TextBoxIsim.Text = reader.Item(0)
+                TextBoxSoyisim.Text = reader.Item(1)
+                TextBoxEposta.Text = reader.Item(2)
+                TextBoxYas.Text = reader.Item(3)
+                TextBoxPostaKodu.Text = reader.Item(4)
+                TextBoxOkulNumarasi.Text = reader.Item(5)
+            End While
+            reader.Close()
+
+
 
             conn.Close()
 
-            TextBoxIsim.Text = "SELECT ad FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
-            TextBoxSoyisim.Text = "SELECT soyad FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
-            TextBoxEposta.Text = "SELECT eposta FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
-            TextBoxYas.Text = "SELECT yas FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
-            TextBoxPostaKodu.Text = "SELECT postaKodu FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
-            TextBoxOkulNumarasi.Text = "SELECT okulNo FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
 
-            command.ExecuteNonQuery()
 
-            con.Close()
+
+
+
         Catch ex As Exception
             MsgBox("Display data error" & ex.Message)
         End Try
@@ -59,7 +62,7 @@ Public Class Form2
         'kaydet butonu
 
         'differentiate update and add
-        If (Me.Tag <> "") Then
+        If (Me.Tag <> Nothing) Then
 
             'güncelle
             Try
