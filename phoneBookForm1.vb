@@ -4,7 +4,7 @@ Public Class Form1
     Dim cmd As New SqlCommand
     Dim i As Integer 'holds selected id
     Dim newForm2 As New Form2
-    Private selectionChanged As Boolean ' selection for gridview click
+
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -39,29 +39,8 @@ Public Class Form1
         command.ExecuteNonQuery()
         con.Close()
     End Sub
-    Public Sub displayData()
-        'show selected rows on input boxes
-        Try
 
-            If con.State = ConnectionState.Open Then
-                con.Close()
-            End If
-            con.Open()
-
-            cmd = con.CreateCommand()
-            cmd.CommandType = CommandType.Text
-            cmd.ExecuteNonQuery()
-            Dim dt As New DataTable()
-            Dim da As New SqlDataAdapter(cmd)
-            da.Fill(dt)
-            DataGridView1.DataSource = dt
-            con.Close()
-        Catch ex As Exception
-            MsgBox("Display data error" & ex.Message)
-        End Try
-
-    End Sub
-    Public Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+    Public Sub Button2_Click(sender As Object, e As EventArgs) Handles ButtonEkle.Click
         'add button
 
         newForm2.ShowDialog()
@@ -69,48 +48,42 @@ Public Class Form1
 
     End Sub
 
-    Public Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Public Sub Button1_Click(sender As Object, e As EventArgs) Handles ButtonGuncelle.Click
         'update button
 
-        newForm2.Tag = DataGridView1.SelectedRows.Item(0).ToString()
+        newForm2.Tag = DataGridView1.SelectedRows.Item(0).Cells(0).Value
         newForm2.ShowDialog()
 
 
     End Sub
 
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles ButtonSil.Click
 
         'delete button
 
         Try
-            If DataGridView1.SelectedRows.Count > 0 Then
-                i = DataGridView1.SelectedCells.Item(0).Value
-
-                If i = "" Then ' being sure its not empty
-                    MessageBox.Show("Empty Id")
-
-                Else
-                    'sql command
-                    Dim command As New SqlCommand("DELETE telefonDefteri  WHERE telefonDefteriID = @id", con)
-                    command.Parameters.Add("@id", SqlDbType.Int).Value = i
-                    con.Open()
-
-                        If command.ExecuteNonQuery() = 1 Then
-                        MessageBox.Show("Kişi silindi")
-                        loadData()
-                    Else
-                        MessageBox.Show("Kişi silinemedi")
-                    End If
-
-                        con.Close()
-
-                    End If
 
 
-                    Else
-                MessageBox.Show("Hiçbir kayıt seçilmedi")
+            'sql command
+            Dim command As New SqlCommand("DELETE telefonDefteri  WHERE telefonDefteriID = @id", con)
+
+            command.Parameters.Add("@id", SqlDbType.Int).Value = Me.DataGridView1.CurrentRow.Cells("telefonDefteriID").Value
+
+            If ConnectionState.Open Then
+                con.Close()
             End If
 
+            'open connection
+            con.Open()
+
+            'execute
+            command.ExecuteNonQuery()
+
+            'refresh table
+            loadData()
+            con.Close()
+
+            MessageBox.Show("Kişi silindi")
 
 
 
@@ -121,66 +94,14 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
-        'choose row to show in input boxes
-        Try
-            If con.State = ConnectionState.Open Then
-                con.Close()
-            End If
-
-            con.Open()
-
-            i = DataGridView1.SelectedCells.Item(0).Value
-
-            If Not selectionChanged Then
-                DataGridView1.ClearSelection()
-                selectionChanged = True
-            Else
-                selectionChanged = False
-            End If
-
-
-
-
-            cmd = con.CreateCommand()
-            cmd.CommandType = CommandType.Text
-
-            cmd.ExecuteNonQuery()
-
-            Dim dt As New DataTable()
-            Dim da As New SqlDataAdapter(cmd)
-            Dim dr As SqlClient.SqlDataReader
-
-            da.Fill(dt)
-
-            dr = cmd.ExecuteReader(CommandBehavior.CloseConnection)
-
-            While dr.Read
-
-                Form2.TextBox1.Text = DataGridView1.SelectedRows.Item(1).ToString
-                Form2.TextBox2.Text = DataGridView1.SelectedRows.Item(2).ToString
-                Form2.TextBox3.Text = DataGridView1.SelectedRows.Item(3).ToString
-                Form2.TextBox4.Text = DataGridView1.SelectedRows.Item(4).ToString
-                Form2.TextBox5.Text = DataGridView1.SelectedRows.Item(5).ToString
-                Form2.TextBox6.Text = DataGridView1.SelectedRows.Item(6).ToString
-            End While
-
-
-        Catch hata As Exception
-            MsgBox("DataGridView_Click error. " & hata.Message)
-        End Try
-
-    End Sub
 
     Private Sub DataGridView1_Click(sender As Object, e As EventArgs) Handles DataGridView1.Click
 
         DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect
 
     End Sub
-    Private Sub dataGridView1_SelectionChanged(sender As Object, e As EventArgs)
-        selectionChanged = True
+
+    Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
+
     End Sub
-
-
-
 End Class
