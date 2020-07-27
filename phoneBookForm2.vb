@@ -1,4 +1,5 @@
 Imports System.Data.SqlClient
+Imports System.Data.Sql
 Public Class Form2
     Dim con As New SqlConnection("Server=DESKTOP-E5T285L;Database= telefonRehberi;Integrated Security =true")
     Dim cmd As New SqlCommand
@@ -8,64 +9,96 @@ Public Class Form2
 
         If Me.Tag <> "" Then
 
-            'veri çekilip gösterilecek...
-
-            Form1.displayData() 'show selected row
-            i = Form1.DataGridView1.SelectedRows.Item(0).ToString 'get selected row
+            'veri çekilip gösterilecek
+            displayData()
 
         End If
 
     End Sub
+    Public Sub displayData()
+        'show selected rows on input boxes
+        Try
+            'check connection
+            If con.State = ConnectionState.Open Then
+                con.Close()
+            End If
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+            con.Open()
+
+            Dim command As New SqlCommand("SELECT ad,soyad,eposta,yas,postaKodu,okulNo FROM telefonDefteri WHERE telefonDefteriID = '" Me.Tag"' ", con)
+            command.Parameters.Add("@id", SqlDbType.NVarChar).Value = Me.Tag
+
+            Dim conn As SqlConnection = New SqlConnection()
+            Dim constr As String = "Data Source=Localhost;Initial Catalog=telefonRehberi;Persist Security Info=true;" _
+            & "user ID=sa;Password= ***;"
+            conn.ConnectionString = constr
+            Dim cmd As SqlCommand = New SqlCommand()
+            conn.Open()
+
+            cmd.CommandText = ""
+
+            conn.Close()
+
+            TextBoxIsim.Text = "SELECT ad FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
+            TextBoxSoyisim.Text = "SELECT soyad FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
+            TextBoxEposta.Text = "SELECT eposta FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
+            TextBoxYas.Text = "SELECT yas FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
+            TextBoxPostaKodu.Text = "SELECT postaKodu FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
+            TextBoxOkulNumarasi.Text = "SELECT okulNo FROM telefonDefteri WHERE telefonDefteriID =Me.Tag"
+
+            command.ExecuteNonQuery()
+
+            con.Close()
+        Catch ex As Exception
+            MsgBox("Display data error" & ex.Message)
+        End Try
+
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles ButtonKaydet.Click
         'kaydet butonu
 
         'differentiate update and add
         If (Me.Tag <> "") Then
+
             'güncelle
             Try
 
 
-                If i = "" Then ' be sure its not empty
-                    MessageBox.Show("Güncellenecek kayıt yok")
 
-                Else
-                    'sql command
-                    Dim command As New SqlCommand("UPDATE TelefonDefteri SET ad = @name ,soyad = @surname ,eposta = @email,
+                'sql command
+                Dim command As New SqlCommand("UPDATE TelefonDefteri SET ad = @name ,soyad = @surname ,eposta = @email,
                     yas=@age,postaKodu=@postCode,okulNo=@stdNo WHERE telefonDefteriID = @id ", con)
 
-                    'sql injection security parameters
-
-                    command.Parameters.Add("@name", SqlDbType.VarChar).Value = TextBox1.Text
-                    command.Parameters.Add("@surname", SqlDbType.VarChar).Value = TextBox2.Text
-                    command.Parameters.Add("@email", SqlDbType.VarChar).Value = TextBox3.Text
-                    command.Parameters.Add("@age", SqlDbType.Int).Value = TextBox4.Text
-                    command.Parameters.Add("@postCode", SqlDbType.VarChar).Value = TextBox5.Text
-                    command.Parameters.Add("@stdNo", SqlDbType.VarChar).Value = TextBox6.Text
-                    command.Parameters.Add("@id", SqlDbType.Int).Value = i
+                'sql injection security parameters
 
 
-                    'check connection state
-                    If ConnectionState.Open Then
-                        con.Close()
-                    End If
-                    'open connection
-                    con.Open()
-                    'execute command
-                    command.ExecuteNonQuery()
 
-                    'check execution success
-                    If command.ExecuteNonQuery() = 1 Then
-                        MessageBox.Show("Kayıt güncellendi")
-                        Form1.loadData()
+                command.Parameters.Add("@name", SqlDbType.VarChar).Value = TextBoxIsim.Text
+                command.Parameters.Add("@surname", SqlDbType.VarChar).Value = TextBoxSoyisim.Text
+                command.Parameters.Add("@email", SqlDbType.VarChar).Value = TextBoxEposta.Text
+                command.Parameters.Add("@age", SqlDbType.Int).Value = TextBoxYas.Text
+                command.Parameters.Add("@postCode", SqlDbType.VarChar).Value = TextBoxPostaKodu.Text
+                command.Parameters.Add("@stdNo", SqlDbType.VarChar).Value = TextBoxOkulNumarasi.Text
 
-                    Else
-                        MessageBox.Show("Kayıt Güncellenemedi")
-                    End If
-                    ' close connection
+
+                'check connection state
+                If ConnectionState.Open Then
                     con.Close()
-
                 End If
+                'open connection
+                con.Open()
+                'execute command
+                command.ExecuteNonQuery()
+
+                MessageBox.Show("Kayıt güncellendi")
+                Form1.loadData()
+
+
+                ' close connection
+                con.Close()
+
+
                 ' clear textboxes
                 Dim X As Control
                 For Each X In Me.Controls
@@ -89,19 +122,21 @@ Public Class Form2
                 Values(@name,@surname,@email,@age,@pcode,@sno) ", con)
 
                 'sql injection security parameters
-                command.Parameters.Add("@name", SqlDbType.VarChar).Value = TextBox1.Text
-                command.Parameters.Add("@surname", SqlDbType.VarChar).Value = TextBox2.Text
-                command.Parameters.Add("@email", SqlDbType.VarChar).Value = TextBox3.Text
-                command.Parameters.Add("@age", SqlDbType.Int).Value = TextBox4.Text
-                command.Parameters.Add("@pcode", SqlDbType.VarChar).Value = TextBox5.Text
-                command.Parameters.Add("@sno", SqlDbType.VarChar).Value = TextBox6.Text
+                command.Parameters.Add("@name", SqlDbType.VarChar).Value = TextBoxIsim.Text
+                command.Parameters.Add("@surname", SqlDbType.VarChar).Value = TextBoxSoyisim.Text
+                command.Parameters.Add("@email", SqlDbType.VarChar).Value = TextBoxEposta.Text
+                command.Parameters.Add("@age", SqlDbType.Int).Value = TextBoxYas.Text
+                command.Parameters.Add("@pcode", SqlDbType.VarChar).Value = TextBoxPostaKodu.Text
+                command.Parameters.Add("@sno", SqlDbType.VarChar).Value = TextBoxOkulNumarasi.Text
 
                 'check the connection state
                 If ConnectionState.Open Then
                     con.Close()
                 End If
+
                 'open connection
                 con.Open()
+
                 'execute
                 command.ExecuteNonQuery()
 
@@ -125,7 +160,6 @@ Public Class Form2
             Catch ex As Exception
                 MsgBox("adding error " & ex.Message)
             End Try
-
         End If
 
     End Sub
