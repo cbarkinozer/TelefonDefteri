@@ -117,9 +117,9 @@ Public Class Form1
         filterData("")
     End Sub
     Public Sub filterData(valueToSearch As String)
-        Dim searchQuery As String = "SELECT * FROM telefonRehberi CONCAT(ad,soyad,eposta,yas,postaKodu,okulNo) like '%" & valueToSearch & "%'"
+        Dim searchQuery As String = "SELECT * FROM telefonDefteri WHERE CONCAT(ad,soyad,eposta,yas,postaKodu,okulNo) like '%" & valueToSearch & "%'"
         Dim command As New SqlCommand(searchQuery, con)
-        Dim adapter As New SqlDataAdapter()
+        Dim adapter As New SqlDataAdapter(command)
         Dim table As New DataTable()
         adapter.Fill(table)
         DataGridView1.DataSource = table
