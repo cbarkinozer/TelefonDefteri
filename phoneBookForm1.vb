@@ -63,12 +63,17 @@ Public Class Form1
 
         Try
 
+            If MessageBox.Show("Do you really want to delete this record?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.No Then
+                MsgBox("Operation cancelled")
+                Exit Sub
+            End If
 
-            'sql command
-            Dim command As New SqlCommand("DELETE telefonDefteri  WHERE telefonDefteriID = = " & Me.Tag, con)
 
-            command.Parameters.Add("@id", SqlDbType.Int).Value = Me.DataGridView1.CurrentRow.Cells("telefonDefteriID").Value
+            ' sql command
+            Dim command As New SqlCommand("DELETE FROM TelefonDefteri WHERE telefonDefteriID = " & Me.Tag, con)
 
+
+            'check the connection state
             If ConnectionState.Open Then
                 con.Close()
             End If
@@ -79,16 +84,19 @@ Public Class Form1
             'execute
             command.ExecuteNonQuery()
 
-            'refresh table
-            loadData()
-            con.Close()
+            MessageBox.Show("Kayıt silindi")
 
-            MessageBox.Show("Kişi silindi")
+            'refresh
+            loadData()
+
+
+            'close connection
+            con.Close()
 
 
 
         Catch ex As Exception
-            MsgBox("delete error" & ex.Message)
+            MsgBox("Delete error " & ex.Message)
         End Try
 
 
@@ -103,5 +111,21 @@ Public Class Form1
 
     Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
 
+    End Sub
+
+    Private Sub TextBoxAra_TextChanged(sender As Object, e As EventArgs) Handles TextBoxAra.TextChanged
+        filterData("")
+    End Sub
+    Public Sub filterData(valueToSearch As String)
+        Dim searchQuery As String = "SELECT * FROM telefonRehberi CONCAT(ad,soyad,eposta,yas,postaKodu,okulNo) like '%" & valueToSearch & "%'"
+        Dim command As New SqlCommand(searchQuery, con)
+        Dim adapter As New SqlDataAdapter()
+        Dim table As New DataTable()
+        adapter.Fill(table)
+        DataGridView1.DataSource = table
+    End Sub
+
+    Private Sub ButtonAra_Click(sender As Object, e As EventArgs) Handles ButtonAra.Click
+        filterData(TextBoxAra.Text)
     End Sub
 End Class
