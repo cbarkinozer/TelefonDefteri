@@ -65,7 +65,7 @@ Public Class Form1
 
 
             'sql command
-            Dim command As New SqlCommand("DELETE telefonDefteri  WHERE telefonDefteriID = @id", con)
+            Dim command As New SqlCommand("DELETE telefonDefteri  WHERE telefonDefteriID = = " & Me.Tag, con)
 
             command.Parameters.Add("@id", SqlDbType.Int).Value = Me.DataGridView1.CurrentRow.Cells("telefonDefteriID").Value
 
