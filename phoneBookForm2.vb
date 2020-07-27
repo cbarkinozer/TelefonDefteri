@@ -71,7 +71,7 @@ Public Class Form2
 
                 'sql command
                 Dim command As New SqlCommand("UPDATE TelefonDefteri SET ad = @name ,soyad = @surname ,eposta = @email,
-                    yas=@age,postaKodu=@postCode,okulNo=@stdNo WHERE telefonDefteriID = @id ", con)
+                    yas=@age,postaKodu=@postCode,okulNo=@stdNo WHERE telefonDefteriID = " & Me.Tag, con)
 
                 'sql injection security parameters
 
@@ -84,13 +84,13 @@ Public Class Form2
                 command.Parameters.Add("@postCode", SqlDbType.VarChar).Value = TextBoxPostaKodu.Text
                 command.Parameters.Add("@stdNo", SqlDbType.VarChar).Value = TextBoxOkulNumarasi.Text
 
-
                 'check connection state
                 If ConnectionState.Open Then
                     con.Close()
                 End If
                 'open connection
                 con.Open()
+
                 'execute command
                 command.ExecuteNonQuery()
 
