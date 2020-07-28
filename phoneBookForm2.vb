@@ -22,7 +22,7 @@ Public Class Form2
 
             Dim conn As SqlConnection = New SqlConnection()
             Dim constr As String = "Data Source=Localhost;Initial Catalog=telefonRehberi;Persist Security Info=true;" _
-            & "user ID=sa;Password= barorkar99;"
+            & "user ID=sa;Password= ***;"
             Dim cmd As New SqlCommand
             conn.ConnectionString = constr
             cmd.Connection = conn
