@@ -4,9 +4,6 @@ Public Class Form1
     Dim cmd As New SqlCommand
     Dim i As Integer 'holds selected id
     Dim newForm2 As New Form2
-
-
-
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'TODO: This line of code loads data into the 'TelefonRehberiDataSet.telefonDefteri' table. You can move, or remove it, as needed.
         Me.TelefonDefteriTableAdapter.Fill(Me.TelefonRehberiDataSet.telefonDefteri)
@@ -63,15 +60,16 @@ Public Class Form1
 
         Try
 
-            If MessageBox.Show("Do you really want to delete this record?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.No Then
-                MsgBox("Operation cancelled")
+            If MessageBox.Show("Bu kaydı silmek istediğinize emin misiniz?", "Sil", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.No Then
+                MsgBox("İşlem iptal edildi")
                 Exit Sub
             End If
 
 
             ' sql command
-            Dim command As New SqlCommand("DELETE FROM TelefonDefteri WHERE telefonDefteriID = " & Me.Tag, con)
 
+
+            Dim command As New SqlCommand("DELETE FROM TelefonDefteri WHERE telefonDefteriID =" & DataGridView1.SelectedRows.Item(0).Cells(0).Value, con)
 
             'check the connection state
             If ConnectionState.Open Then
@@ -83,7 +81,7 @@ Public Class Form1
 
             'execute
             command.ExecuteNonQuery()
-
+            con.Close()
             MessageBox.Show("Kayıt silindi")
 
             'refresh
@@ -91,7 +89,7 @@ Public Class Form1
 
 
             'close connection
-            con.Close()
+
 
 
 
@@ -117,7 +115,7 @@ Public Class Form1
         filterData("")
     End Sub
     Public Sub filterData(valueToSearch As String)
-        Dim searchQuery As String = "SELECT * FROM telefonDefteri WHERE CONCAT(ad,soyad,eposta,yas,postaKodu,okulNo) like '%" & valueToSearch & "%'"
+        Dim searchQuery As String = "SELECT * FROM telefonDefteri WHERE CONCAT(ad,soyad,eposta) like '%" & valueToSearch & "%'"
         Dim command As New SqlCommand(searchQuery, con)
         Dim adapter As New SqlDataAdapter(command)
         Dim table As New DataTable()
