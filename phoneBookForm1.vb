@@ -2,7 +2,6 @@ Imports System.Data.SqlClient
 Public Class Form1
     Dim con As New SqlConnection("Server=DESKTOP-E5T285L;Database= telefonRehberi;Integrated Security =true")
     Dim cmd As New SqlCommand
-    Dim i As Integer 'holds selected id
     Dim newForm2 As New Form2
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'TODO: This line of code loads data into the 'TelefonRehberiDataSet.telefonDefteri' table. You can move, or remove it, as needed.
